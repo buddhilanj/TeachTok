@@ -4,7 +4,7 @@ import React from "react";
 import FeedNavigation from "@/navigation/feed";
 import UserScreen from "@/screens/user";
 
-const App = createStackNavigator();
+const Home = createStackNavigator();
 const stacks = [
   {
     name: "FeedScreen",
@@ -16,16 +16,16 @@ const stacks = [
   },
 ];
 
-export default function AppStack() {
+export default function HomeStack() {
   return (
-    <App.Navigator screenOptions={{ headerShown: false }}>
+    <Home.Navigator screenOptions={{ headerShown: false }}>
       {stacks.map((stack) => (
-        <App.Screen
+        <Home.Screen
           key={stack.name}
           name={stack.name}
           component={stack.component}
         />
       ))}
-    </App.Navigator>
+    </Home.Navigator>
   );
 }

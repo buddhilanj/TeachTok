@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useMemo } from "react";
 import { StyleSheet } from "react-native";
 
-import FeedNavigation from "../feed";
+import HomeNavigation from "../home";
 
 import { useAppColorProfile } from "@/hooks/colorHooks";
 import ActivityScreen from "@/screens/activity";
@@ -28,7 +28,7 @@ export const TABS: Tabs[] = [
   {
     name: "Home",
     id: "HomeTab",
-    component: FeedNavigation,
+    component: HomeNavigation,
     icon: "home",
   },
   {
