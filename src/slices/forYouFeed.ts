@@ -1,22 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { Content } from "@/data/";
+import { Content, ContentView } from "@/data/";
 import { getForYou } from "@/services/getForYou";
 import { RootState } from "@/store";
 
-export interface ContentViewObject extends Content {
-  loading: "idle" | "loading" | "success" | "error";
-  requestId: string;
-}
 
 // Define a type for the slice state
 export interface ContentState {
   displayIndex: number;
-  feed: ContentViewObject[];
+  feed: ContentView[];
 }
 
 export const getNextForYou = createAsyncThunk<
-  ContentViewObject,
+  ContentView,
   undefined,
   { state: RootState }
 >(
@@ -25,7 +21,7 @@ export const getNextForYou = createAsyncThunk<
   async (_, { requestId }) => {
     const response = await getForYou();
     const content = response?.data as Content;
-    return { ...content, requestId, loading: "success" } as ContentViewObject;
+    return { ...content, requestId, loading: "success" } as ContentView;
   },
 );
 
@@ -46,7 +42,7 @@ export const contentSlice = createSlice({
         (item) => item.requestId === action.meta.requestId,
       );
       if (!currentItem.length) {
-        const newItem: ContentViewObject = {
+        const newItem: ContentView = {
           loading: "loading",
           requestId: action.meta.requestId,
           type: "flashcard",
