@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     width: 200,
     backgroundColor: "transparent",
     elevation: 0,
+    borderTopWidth:0
   },
   tabBarIconStyle: {
     display: "none",

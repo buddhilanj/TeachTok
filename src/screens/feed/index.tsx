@@ -1,8 +1,6 @@
 import { useRoute } from "@react-navigation/native";
 import React, { useCallback } from "react";
-import { FlatList } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-
+import { FlatList,SafeAreaView } from "react-native";
 import { ContentCardView } from "@/components/feed/ContentCardView";
 import { ContentView } from "@/data";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";

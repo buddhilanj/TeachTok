@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions, Platform } from "react-native";
 
 const { height, width } = Dimensions.get("window");
-const fullscreenHeight = height - (Platform.OS === "ios" ? 69 : 73);
+const fullscreenHeight = height - (Platform.OS === "ios" ? 69 : 50);
 const style = StyleSheet.create({
   container: {
     height: fullscreenHeight,
