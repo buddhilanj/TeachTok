@@ -1,4 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useMemo } from "react";
 import {
@@ -10,12 +9,12 @@ import {
 } from "react-native";
 
 import style from "./style";
-import { FlashCardView } from "../FlashCardView";
-import { MCQView } from "../MCQView";
 
-import { ButtonIcons, UserAccountButton } from "@/components/general";
-import { Content, ContentView, FlashCard, MCQ } from "@/data/";
+import { FlashCardView } from "@/components/feed/FlashCardView";
+import { MCQView } from "@/components/feed/MCQView";
+import { Content, ContentView, isContentFlashCard, isContentMCQ } from "@/data";
 import { useAppColorProfile } from "@/hooks/colorHooks";
+import RightSideBar from "../RightSideBar";
 
 interface ContentCardProps {
   content: Content;
@@ -31,32 +30,19 @@ interface WrapperContentViewProps {
   children: JSX.Element;
 }
 
-interface ContentIconsButtonProps {
-  id: string;
-  text: string;
-  icon: keyof typeof Ionicons.glyphMap;
-}
-
 export const ContentCardView: React.FC<ContentCardViewProps> = ({
   content,
-  index,
 }) => {
-  if (content.loading === "loading") {
+  if (content.content === null || content.loading === "loading") {
     return (
       <View style={style.container}>
         <ActivityIndicator />
       </View>
     );
   }
-  return <ContentCard content={content} />;
+  return <ContentCard content={content.content} />;
 };
 
-const icons: ContentIconsButtonProps[] = [
-  { id: "like", text: "20", icon: "heart" },
-  { id: "comment", text: "20", icon: "chatbubble-ellipses" },
-  { id: "bookmark", text: "20", icon: "bookmark" },
-  { id: "forward", text: "20", icon: "arrow-redo" },
-];
 
 const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
   const colorPallet = useAppColorProfile();
@@ -72,11 +58,11 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
   let renderContent = <Text>Undefined Content Type</Text>;
   let url: string | undefined = undefined;
 
-  if (content.type === "flashcard") {
-    renderContent = <FlashCardView flashcard={content as FlashCard} />;
-  } else if (content.type === "mcq") {
-    renderContent = <MCQView mcq={content as MCQ} />;
-    url = (content as MCQ).image;
+  if (isContentFlashCard(content)) {
+    renderContent = <FlashCardView flashcard={content} />;
+  } else if (isContentMCQ(content)) {
+    renderContent = <MCQView mcq={content} />;
+    url = content.image;
   }
   return (
     <WrapperContent url={url}>
@@ -89,14 +75,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
               <Text style={colorSyle.text}>{content.description}</Text>
             </View>
           </View>
-          <View style={style.rightBarWrapper}>
-            <View style={style.rightIconBar}>
-              <UserAccountButton uri={content.user?.avatar ?? ""} />
-              {icons.map((icon) => (
-                <ButtonIcons icon={icon.icon} label={icon.text} key={icon.id} />
-              ))}
-            </View>
-          </View>
+          <RightSideBar userImageURI={content.user.avatar}/>
         </View>
 
         <View style={[style.playlist, colorSyle.playListBackground]}>

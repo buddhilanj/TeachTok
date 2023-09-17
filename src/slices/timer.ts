@@ -1,12 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// Define a type for the slice state
 export interface TimerState {
   timeTotal: number;
   startTime: string;
 }
 
-// Define the initial state using that type
 const initialState: TimerState = {
   timeTotal: 0,
   startTime: new Date().toISOString(),
@@ -14,7 +12,6 @@ const initialState: TimerState = {
 
 export const timerSlice = createSlice({
   name: "content",
-  // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
     startTimer: (state) => {

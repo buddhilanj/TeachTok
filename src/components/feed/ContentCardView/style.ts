@@ -10,10 +10,6 @@ const style = StyleSheet.create({
   content: {
     flex: 1,
   },
-  rightBarWrapper: {
-    justifyContent: "flex-end",
-  },
-  rightIconBar: { alignContent: "space-around" },
   bottomFooter: { padding: 10 },
   playlist: { padding: 5, paddingLeft: 10 },
   wrapperContainer: {

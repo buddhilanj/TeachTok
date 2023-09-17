@@ -1,10 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { Content, ContentView } from "@/data/";
+import { ContentView, isContent, isContentView, isValidContent } from "@/data/";
 import { getFollowing } from "@/services/getFollowing";
 import { RootState } from "@/store";
 
-// Define a type for the slice state
 export interface ContentState {
   displayIndex: number;
   feed: ContentView[];
@@ -14,17 +13,20 @@ export const getNextFollowing = createAsyncThunk<
   ContentView,
   undefined,
   { state: RootState }
->(
-  "feed/getFollowing",
-  // if you type your function argument here
-  async (_, { requestId }) => {
-    const response = await getFollowing();
-    const content = response?.data as Content;
-    return { ...content, requestId, loading: "success" } as ContentView;
-  },
+>("feed/getFollowing", async (_, { requestId }) => {
+  const response = await getFollowing();
+  const content: unknown = response?.data;
+  if (isValidContent(content)) {
+    return { content, requestId, loading: "success" } satisfies ContentView;
+  }
+  return {
+    loading: "error",
+    requestId,
+    content: null,
+  } satisfies ContentView;
+},
 );
 
-// Define the initial state using that type
 const initialState: ContentState = {
   displayIndex: 0,
   feed: [],
@@ -32,7 +34,6 @@ const initialState: ContentState = {
 
 export const contentSlice = createSlice({
   name: "content",
-  // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -44,10 +45,7 @@ export const contentSlice = createSlice({
         const newItem: ContentView = {
           loading: "loading",
           requestId: action.meta.requestId,
-          type: "flashcard",
-          id: 0,
-          playlist: "",
-          description: "",
+          content: null,
         };
         state.feed.push(newItem);
       }
@@ -65,7 +63,11 @@ export const contentSlice = createSlice({
         (item) => item.requestId === action.meta.requestId,
       );
       if (foundIndex >= 0) {
-        state.feed[foundIndex] = action.payload;
+        if (isContentView(action.payload)) {
+          state.feed[foundIndex] = action.payload;
+        } else {
+          state.feed[foundIndex].loading = "error";
+        }
       }
     });
   },
